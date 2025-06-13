@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.note-editor {
+  min-height: 300px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.note-card {
+  margin-bottom: 16px;
+  transition: transform 0.2s ease;
+}
+
+.note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tag {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.ai-suggestion {
+  background-color: #e3f2fd;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.ai-tag {
+  background-color: #e8f5e9;
+}
+
+.user-tag {
+  background-color: #e3f2fd;
+}
