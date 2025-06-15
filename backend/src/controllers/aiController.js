@@ -1,11 +1,10 @@
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 const Note = require('../models/Note');
 
 // Configure OpenAI API
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 // Get text completion suggestions
 exports.getCompletionSuggestion = async (req, res) => {
@@ -16,8 +15,8 @@ exports.getCompletionSuggestion = async (req, res) => {
       return res.status(400).json({ message: 'Text is required' });
     }
     
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
+    const response = await openai.completions.create({
+      model: "gpt-3.5-turbo-instruct",
       prompt: text,
       max_tokens: 100,
       temperature: 0.7,
@@ -25,7 +24,7 @@ exports.getCompletionSuggestion = async (req, res) => {
       stop: null
     });
     
-    const suggestion = response.data.choices[0].text.trim();
+    const suggestion = response.choices[0].text.trim();
     res.json({ suggestion });
   } catch (error) {
     console.error('Error in getCompletionSuggestion:', error);
@@ -52,8 +51,8 @@ exports.generateSummary = async (req, res) => {
     }
     
     // Generate summary using OpenAI
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
+    const response = await openai.completions.create({
+      model: "gpt-3.5-turbo-instruct",
       prompt: `Summarize the following text in a concise paragraph:\n\n${note.content}`,
       max_tokens: 150,
       temperature: 0.5,
@@ -61,7 +60,7 @@ exports.generateSummary = async (req, res) => {
       stop: null
     });
     
-    const summary = response.data.choices[0].text.trim();
+    const summary = response.choices[0].text.trim();
     
     // Update note with summary
     note.summary = summary;
@@ -93,8 +92,8 @@ exports.categorizeNote = async (req, res) => {
     }
     
     // Generate categories and tags using OpenAI
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
+    const response = await openai.completions.create({
+      model: "gpt-3.5-turbo-instruct",
       prompt: `Given the following note, provide a category and 5 relevant tags in JSON format:\n\n${note.title}\n${note.content}\n\nOutput format: {"category": "category_name", "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"]}`,
       max_tokens: 150,
       temperature: 0.5,
@@ -103,7 +102,7 @@ exports.categorizeNote = async (req, res) => {
     });
     
     // Parse the response
-    const responseText = response.data.choices[0].text.trim();
+    const responseText = response.choices[0].text.trim();
     const parsedResponse = JSON.parse(responseText);
     
     // Update note with category and AI tags
@@ -196,8 +195,8 @@ exports.naturalLanguageSearch = async (req, res) => {
     }
     
     // Use OpenAI to extract search keywords from natural language query
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
+    const response = await openai.completions.create({
+      model: "gpt-3.5-turbo-instruct",
       prompt: `Extract the most important search keywords from this query: "${query}"\n\nKeywords:`,
       max_tokens: 50,
       temperature: 0.3,
@@ -205,7 +204,7 @@ exports.naturalLanguageSearch = async (req, res) => {
       stop: null
     });
     
-    const keywords = response.data.choices[0].text.trim()
+    const keywords = response.choices[0].text.trim()
       .split(/,|\n/)
       .map(keyword => keyword.trim())
       .filter(keyword => keyword.length > 0);
